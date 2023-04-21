@@ -72,7 +72,7 @@ const saveTodo = (todo) => {
 </script>
 
 <template>
-  <div class="flex items-center justify-center w-full gap-4 px-3 pt-20 md:px-0">
+  <div class="sticky top-0 bg-white flex items-center justify-center w-full gap-4 px-3 pt-20 md:px-0 max-h-[500px] overflow-y-auto">
     <form
       @submit.prevent="addTodo"
       class="flex items-center justify-center max-w-[450px] w-full gap-2"
@@ -93,7 +93,7 @@ const saveTodo = (todo) => {
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="white"
-          class="w-6 h-6"
+          class="w-5 h-5"
         >
           <path
             stroke-linecap="round"
@@ -104,7 +104,7 @@ const saveTodo = (todo) => {
       </button>
     </form>
   </div>
-
+<div class="">
   <div v-for="todo in todos" class="px-3 md:px-0">
     <div class="flex items-center justify-center w-full gap-4 pt-5">
       <div
@@ -172,8 +172,8 @@ const saveTodo = (todo) => {
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
               fill="white"
-              height="24px"
-              width="24px"
+              height="16px"
+              width="16px"
               version="1.1"
               viewBox="0 0 512 512"
               enable-background="new 0 0 512 512"
@@ -197,7 +197,7 @@ const saveTodo = (todo) => {
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="white"
-              class="w-6 h-6"
+              class="w-4 h-4"
             >
               <path
                 stroke-linecap="round"
@@ -210,4 +210,6 @@ const saveTodo = (todo) => {
       </div>
     </div>
   </div>
+
+</div>
 </template>
