@@ -10,7 +10,6 @@ import {
   onSnapshot,
   addDoc,
   doc,
-  
   deleteDoc,
   updateDoc,
   orderBy,
@@ -57,6 +56,19 @@ const toggleDone = (id) => {
     done: !todos.value[index].done,
   });
 };
+
+const editingTodo = ref(null);
+const editTodo = (todo) => {
+  console.log(todo, "todo");
+  editingTodo.value = todo.id;
+};
+
+const saveTodo = (todo) => {
+  updateDoc(doc(todosCollection, todo.id), {
+    content: todo.content,
+  });
+  editingTodo.value = null;
+};
 </script>
 
 <template>
@@ -97,12 +109,36 @@ const toggleDone = (id) => {
     <div class="flex items-center justify-center w-full gap-4 pt-5">
       <div
         class="rounded-3xl text-[14px] shadow bg-white flex items-center h-full w-[450px] p-6"
-        :class="{ 'bg-green-200': todo.done }"
+        :class="{ 'bg-green-400': todo.done }"
       >
-        <div class="w-full">
-          <p :class="todo.done ? 'line-through' : 'line-through-none'">
+        <div class="flex flex-col w-full">
+          <p
+            v-if="editingTodo !== todo.id"
+            :class="todo.done ? 'line-through' : 'line-through-none'"
+          >
             {{ todo.content }}
           </p>
+          <input
+            v-else
+            type="text"
+            class="border-2 p-3 placeholder:text-[14px] border-gray-300 h-[40px] rounded-3xl w-full focus:outline-none focus:ring-0"
+            :value="todo.content"
+            @input="todo.content = $event.target.value"
+          />
+          <div v-if="editingTodo === todo.id" class="flex gap-2">
+            <button
+              @click="saveTodo(todo)"
+              class="p-2 text-[14px] text-blue-400"
+            >
+              Save
+            </button>
+            <button
+              @click="editingTodo = null"
+              class="p-2 text-[14px] text-red-400"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
         <div class="flex items-center justify-end w-full gap-2">
           <button
@@ -126,6 +162,29 @@ const toggleDone = (id) => {
                 stroke-linejoin="round"
                 d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
+            </svg>
+          </button>
+          <button
+            @click="editTodo(todo)"
+            class="p-2 bg-yellow-400 rounded-full"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              fill="white"
+              height="24px"
+              width="24px"
+              version="1.1"
+              viewBox="0 0 512 512"
+              enable-background="new 0 0 512 512"
+            >
+              <g>
+                <g>
+                  <path
+                    d="m455.1,137.9l-32.4,32.4-81-81.1 32.4-32.4c6.6-6.6 18.1-6.6 24.7,0l56.3,56.4c6.8,6.8 6.8,17.9 0,24.7zm-270.7,271l-81-81.1 209.4-209.7 81,81.1-209.4,209.7zm-99.7-42l60.6,60.7-84.4,23.8 23.8-84.5zm399.3-282.6l-56.3-56.4c-11-11-50.7-31.8-82.4,0l-285.3,285.5c-2.5,2.5-4.3,5.5-5.2,8.9l-43,153.1c-2,7.1 0.1,14.7 5.2,20 5.2,5.3 15.6,6.2 20,5.2l153-43.1c3.4-0.9 6.4-2.7 8.9-5.2l285.1-285.5c22.7-22.7 22.7-59.7 0-82.5z"
+                  />
+                </g>
+              </g>
             </svg>
           </button>
           <button
