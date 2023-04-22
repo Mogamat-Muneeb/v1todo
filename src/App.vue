@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
-import { db } from "./firebase/index";
+import { db , auth} from "./firebase/index";
 import {
   collection,
   getDocs,
@@ -19,6 +20,10 @@ import {
 const todos = ref([]);
 const todosCollection = collection(db, "todos");
 const todosCollectionQuery = query(todosCollection, orderBy("date", "desc"));
+  const provider = new GoogleAuthProvider();
+  const isAuthenticated = ref(false);
+  const user = ref([]);
+
 onMounted(() => {
   onSnapshot(todosCollectionQuery, (querySnapshot) => {
     const fbTofodos = [];
@@ -69,10 +74,34 @@ const saveTodo = (todo) => {
   });
   editingTodo.value = null;
 };
+let signInWithGoogle = () => {
+  signInWithPopup(auth, provider)
+    .then((result) => {
+      // const user = result.user;
+      isAuthenticated.value = true;
+        isAuthenticated.value = user
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      console.log(error, errorCode);
+    });
+};
+console.log(user)
 </script>
 
 <template>
-  <div class="sticky top-0 bg-white flex items-center justify-center w-full gap-4 px-3 pt-20 md:px-0 max-h-[500px] overflow-y-auto">
+  <!-- <div v-if="!isAuthenticated" className="flex content-center justify-center w-screen h-screen p-4">
+        <div className="flex flex-col items-center justify-center">
+          <h1 className="text-2xl font-bold text-center">Gallery</h1>
+          <button
+            className="bg-black text-white rounded h-[45px] w-[160px] mt-4 font-medium shadow-lg"
+            @click="signInWithGoogle()"
+          >
+          Sign In
+          </button>
+        </div>
+      </div> -->
+  <div  class="sticky top-0 bg-white flex items-center justify-center w-full gap-4 px-3 pt-20 md:px-0 max-h-[500px] overflow-y-auto">
     <form
       @submit.prevent="addTodo"
       class="flex items-center justify-center max-w-[450px] w-full gap-2"
