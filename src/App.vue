@@ -154,6 +154,7 @@ const signUserOut = async () => {
         class="flex justify-between max-w-[1280px] mx-auto w-full h-[40px] items-center text-white px-4 lg:px-0 md:px-4"
       >
         <button @click="signUserOut()" class="cursor-pointer">Sign Out</button>
+        <h1 class="font-bold text-[24px]">v1todo</h1>
         <p>
           {{ user.displayName }}
         </p>
