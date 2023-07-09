@@ -155,13 +155,13 @@ const filteredTodos = computed(() => {
       <div
         class="flex justify-between max-w-[1280px] mx-auto w-full h-[40px] items-center text-white px-4 lg:px-0 md:px-4"
       >
-        <button @click="signUserOut()" class="cursor-pointer">Sign Out</button>
+        <button @click="signUserOut()" class="cursor-pointer font-semibold text-[14px]">Sign Out</button>
         <h1 class="font-bold text-[24px]">v1todo</h1>
-        <p>
+        <p class="font-semibold text-[14px]">
           {{ user.displayName }}
         </p>
       </div>
-    </div> 
+    </div>
     <div
       class="sticky top-0 bg-white flex flex-col items-center justify-center w-full gap-4 px-3 pt-20 md:px-0 max-h-[500px] max-w-[1280px] mx-auto overflow-y-auto"
     >
@@ -179,7 +179,6 @@ const filteredTodos = computed(() => {
           :disabled="!newTodoContent"
           class="p-2 bg-blue-400 rounded-full cursor-pointer"
         >
-        
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -196,14 +195,14 @@ const filteredTodos = computed(() => {
           </svg>
         </button>
       </form>
-       <div class="max-w-[450px]  mx-auto w-full">
-         <input
+      <div class="max-w-[450px] mx-auto w-full">
+        <input
           type="text"
-          placeholder="Search"
+          placeholder="Search a todo..."
           class="border-2 p-3 placeholder:text-[14px] border-gray-300 h-[40px] rounded-3xl w-full focus:outline-none focus:ring-0"
           v-model="searchQuery"
-               />
-       </div>
+        />
+      </div>
       <p class="font-bold text-red-400">Undone: {{ undoneTodoCount }}</p>
     </div>
     <div class="">
@@ -316,7 +315,7 @@ const filteredTodos = computed(() => {
   </div>
   <div v-else class="flex content-center justify-center p-4">
     <div class="flex flex-col items-center justify-center">
-      <h1 class="text-2xl font-bold text-center">Gallery</h1>
+      <h1 class="text-2xl font-bold text-center">v1Todo</h1>
       <button
         class="bg-black text-white rounded h-[45px] w-[160px] mt-4 font-medium shadow-lg"
         @click="signInWithGoogle()"
