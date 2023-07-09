@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watchEffect } from "vue";
+import { ref, onMounted, watchEffect, computed } from "vue";
 import {
   signInWithPopup,
   GoogleAuthProvider,
@@ -33,11 +33,12 @@ const todosCollection = collection(db, "todos");
 const todosCollectionQuery = query(todosCollection);
 const provider = new GoogleAuthProvider();
 const user = ref(null);
+const searchQuery = ref("");
 
 const isAuthenticated = ref(false);
 const authInstance = getAuth();
 
-auth.onAuthStateChanged((firebaseUser) => {
+authInstance.onAuthStateChanged((firebaseUser) => {
   if (firebaseUser) {
     // isAuthenticated.value = true;
     user.value = firebaseUser;
@@ -48,7 +49,8 @@ onMounted(() => {
     if (user) {
       const userTodosQuery = query(
         todosCollection,
-        where("uid", "==", user.uid)
+        where("uid", "==", user.uid),
+        orderBy("date", "asc")
       );
 
       onSnapshot(userTodosQuery, (querySnapshot) => {
@@ -83,7 +85,7 @@ const addTodo = () => {
 
 const deleteTodo = (id) => {
   deleteDoc(doc(todosCollection, id));
-    toast.success("Deleted succesfully!!");
+  toast.success("Deleted succesfully!!");
 };
 
 const toggleDone = (id) => {
@@ -131,23 +133,23 @@ const signUserOut = async () => {
   if (auth) {
     await signOut(auth);
     toast.success("Signed out successfully!!");
+    user.value = null;
   }
 };
+
+const undoneTodoCount = computed(() => {
+  return todos.value.filter((todo) => !todo.done).length;
+});
+
+const filteredTodos = computed(() => {
+  const query = searchQuery.value.trim().toLowerCase();
+  return todos.value.filter((todo) => {
+    return todo.content.toLowerCase().includes(query);
+  });
+});
 </script>
 
 <template>
-  <div v-if="!user" class="flex content-center justify-center p-4">
-    <div class="flex flex-col items-center justify-center">
-      <h1 class="text-2xl font-bold text-center">Gallery</h1>
-      <button
-        class="bg-black text-white rounded h-[45px] w-[160px] mt-4 font-medium shadow-lg"
-        @click="signInWithGoogle()"
-      >
-        Sign In
-      </button>
-    </div>
-  </div>
-
   <div v-if="user">
     <div class="bg-blue-400">
       <div
@@ -159,9 +161,9 @@ const signUserOut = async () => {
           {{ user.displayName }}
         </p>
       </div>
-    </div>
+    </div> 
     <div
-      class="sticky top-0 bg-white flex items-center justify-center w-full gap-4 px-3 pt-20 md:px-0 max-h-[500px] max-w-[1280px] mx-auto overflow-y-auto"
+      class="sticky top-0 bg-white flex flex-col items-center justify-center w-full gap-4 px-3 pt-20 md:px-0 max-h-[500px] max-w-[1280px] mx-auto overflow-y-auto"
     >
       <form
         @submit.prevent="addTodo"
@@ -193,9 +195,18 @@ const signUserOut = async () => {
           </svg>
         </button>
       </form>
+       <div class="max-w-[450px]  mx-auto w-full">
+         <input
+          type="text"
+          placeholder="Search"
+          class="border-2 p-3 placeholder:text-[14px] border-gray-300 h-[40px] rounded-3xl w-full focus:outline-none focus:ring-0"
+          v-model="searchQuery"
+               />
+       </div>
+      <p class="font-bold text-red-400">Undone: {{ undoneTodoCount }}</p>
     </div>
     <div class="">
-      <div v-for="todo in todos" :key="todo.id" class="px-3 md:px-0">
+      <div v-for="todo in filteredTodos" :key="todo.id" class="px-3 md:px-0">
         <div class="flex items-center justify-center w-full gap-4 pt-5">
           <div
             class="rounded-3xl text-[14px] shadow bg-white flex items-center h-full w-[450px] p-6"
@@ -300,6 +311,17 @@ const signUserOut = async () => {
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div v-else class="flex content-center justify-center p-4">
+    <div class="flex flex-col items-center justify-center">
+      <h1 class="text-2xl font-bold text-center">Gallery</h1>
+      <button
+        class="bg-black text-white rounded h-[45px] w-[160px] mt-4 font-medium shadow-lg"
+        @click="signInWithGoogle()"
+      >
+        Sign In
+      </button>
     </div>
   </div>
 </template>

@@ -1,14 +1,18 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import {getAuth, setPersistence, browserSessionPersistence} from 'firebase/auth'
+import {
+  getAuth,
+  setPersistence,
+  browserSessionPersistence,
+} from "firebase/auth";
 const firebaseConfig = {
-  apiKey: "AIzaSyDUO8wp6pER1C0jneEYCnSRkvcc2UbQJ20",
-  authDomain: "v1todo.firebaseapp.com",
-  projectId: "v1todo",
-  storageBucket: "v1todo.appspot.com",
-  messagingSenderId: "659986184111",
-  appId: "1:659986184111:web:9ae78da29ccae833a3a15a",
-  measurementId: "G-DK592LBX05",
+  apiKey: import.meta.env.VITE_APP_API_KEY,
+  authDomain: import.meta.env.VITE_APP_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_APP_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_APP_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_APP_MESSAGE_SENDER_ID,
+  appId: import.meta.env.VITE_APP_APP_ID,
+  measurementId: import.meta.env.VITE_APP_MEASUREMET_ID,
 };
 
 // Initialize Firebase
