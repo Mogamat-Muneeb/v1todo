@@ -179,6 +179,7 @@ const filteredTodos = computed(() => {
           :disabled="!newTodoContent"
           class="p-2 bg-blue-400 rounded-full cursor-pointer"
         >
+        
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
